@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Brunengo Consorcios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #FAF6F1;
+      --cream-dark: #F2EBE2;
+      --rose-gold: #C4956A;
+      --rose-gold-light: #D4A97E;
+      --rose-gold-pale: #E8D5C0;
+      --rose-deep: #A67B5B;
+      --blush: #E8C4C4;
+      --blush-light: #F5E6E0;
+      --charcoal: #3D3D3D;
+      --charcoal-light: #5A5A5A;
+      --soft-gray: #8A8A8A;
+      --white: #FFFFFF;
+      --whatsapp: #25D366;
+      --whatsapp-dark: #128C7E;
+      --shadow-soft: 0 2px 12px rgba(196,149,106,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 0;
+      margin: 0;
+    }
+    .phone-frame {
+      width: 100%; max-width: 480px; background: var(--cream);
+      border-radius: 0; overflow: hidden;
+      box-shadow: none;
+      position: relative; min-height: 100vh;
+    }
+    .screen { width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; padding-bottom: 90px; scrollbar-width: none; }
+    .screen::-webkit-scrollbar { display: none; }
+    .page { display: none; animation: fadeIn 0.3s ease; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Header */
+    .mobile-header {
+      background: linear-gradient(135deg, var(--white) 0%, var(--cream) 100%);
+      padding: 26px 24px 16px; border-bottom: 1px solid var(--cream-dark);
+      position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px);
+    }
+    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .header-greeting { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--charcoal); }
+    .header-greeting span { font-style: italic; color: var(--rose-gold); font-weight: 400; }
+    .header-sub { font-size: 12px; color: var(--soft-gray); margin-top: 2px; }
+    .header-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blush) 0%, var(--rose-gold-pale) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: var(--rose-deep); font-weight: 600;
+      border: 2px solid var(--white); box-shadow: var(--shadow-soft); cursor: pointer;
+    }
+    .building-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--white); border: 1px solid var(--cream-dark);
+      padding: 8px 16px; border-radius: 20px; font-size: 12px;
+      font-weight: 500; color: var(--charcoal-light); box-shadow: var(--shadow-soft); cursor: pointer;
+    }
+    .building-pill .arrow { font-size: 10px; color: var(--rose-gold); }
+    .header-back {
+      width: 36px; height: 36px; border-radius: 12px; background: var(--white);
+      border: 1px solid var(--cream-dark); display: flex; align-items: center; justify-content: center;
+      font-size: 18px; cursor: pointer; transition: all 0.2s;
+    }
+    .header-back:active { transform: scale(0.92); background: var(--blush-light); }
+    .header-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: var(--charcoal); }
+    .header-action { font-size: 13px; color: var(--rose-gold); font-weight: 500; cursor: pointer; }
+
+    /* Main Card */
+    .main-card {
+      margin: 20px 20px 0;
+      background: linear-gradient(135deg, var(--rose-gold) 0%, var(--rose-deep) 100%);
+      border-radius: 24px; padding: 24px; color: white;
+      box-shadow: 0 8px 32px rgba(196,149,106,0.3);
+      position: relative; overflow: hidden;
+    }
+    .main-card::after { content: ''; position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: rgba(255,255,255,0.08); border-radius: 50%; }
+    .main-card::before { content: ''; position: absolute; bottom: -20px; left: -20px; width: 80px; height: 80px; background: rgba(255,255,255,0.05); border-radius: 50%; }
+    .card-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; margin-bottom: 8px; font-weight: 500; position: relative; z-index: 1; }
+    .card-amount { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; margin-bottom: 4px; position: relative; z-index: 1; }
+    .card-detail { font-size: 13px; opacity: 0.85; margin-bottom: 20px; position: relative; z-index: 1; }
+    .card-actions { display: flex; gap: 10px; position: relative; z-index: 1; }
+    .card-btn { flex: 1; padding: 12px; border-radius: 14px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
+    .card-btn:active { transform: scale(0.97); }
+    .card-btn-primary { background: white; color: var(--rose-deep); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .card-btn-ghost { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.25); }
+
+    /* Sections */
+    .section-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--charcoal); margin: 28px 20px 16px; display: flex; justify-content: space-between; align-items: center; }
+    .section-title .see-all { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--rose-gold); font-weight: 500; cursor: pointer; }
+
+    /* Horizontal Scroll */
+    .horizontal-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 0 20px 8px; scrollbar-width: none; }
+    .horizontal-scroll::-webkit-scrollbar { display: none; }
+    .action-card { min-width: 92px; background: var(--white); border: 1px solid var(--cream-dark); border-radius: 18px; padding: 16px 10px; text-align: center; box-shadow: var(--shadow-soft); transition: all 0.2s; cursor: pointer; font-family: inherit; }
+    .action-card:active { transform: scale(0.94); }
+    .action-card .ac-icon { width: 56px; height: 56px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 4px 6px rgba(166,123,91,0.25)); }
+    .action-card .ac-icon svg { width: 56px; height: 56px; }
+    .action-card .ac-label { font-size: 12px; font-weight: 500; color: var(--charcoal); }
+
+    /* Notifications */
+    .notification-card { margin: 0 20px 12px; background: var(--white); border: 1px solid var(--cream-dark); border-radius: 18px; padding: 16px; display: flex; gap: 14px; align-items: flex-start; box-shadow: var(--shadow-soft); }
+    .notif-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .notif-icon.gold { background: linear-gradient(135deg, var(--rose-gold-pale), var(--blush-light)); }
+    .notif-icon.red { background: linear-gradient(135deg, #F5D5D5, #F5E8E8); }
+    .notif-icon.green { background: linear-gradient(135deg, #D5F0D5, #E8F5E8); }
+    .notif-icon.blue { background: linear-gradient(135deg, #D5E0E8, #E8F0F5); }
+    .notif-content { flex: 1; }
+    .notif-title { font-size: 14px; font-weight: 600; color: var(--charcoal); margin-bottom: 4px; }
+    .notif-text { font-size: 12px; color: var(--soft-gray); line-height: 1.5; margin-bottom: 6px; }
+    .notif-time { font-size: 11px; color: var(--rose-gold); font-weight: 500; }
+
+    /* History */
+    .history-item { margin: 0 20px 10px; background: var(--white); border: 1px solid var(--cream-dark); border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-soft); }
+    .history-left { display: flex; align-items: center; gap: 12px; }
+    .history-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .history-icon.gold { background: linear-gradient(135deg, var(--rose-gold-pale), var(--blush-light)); }
+    .history-info .month { font-size: 14px; font-weight: 600; color: var(--charcoal); }
+    .history-info .date { font-size: 11px; color: var(--soft-gray); margin-top: 2px; }
+    .history-right { text-align: right; }
+    .history-amount { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: var(--charcoal); }
+    .history-status { display: inline-block; font-size: 10px; padding: 3px 10px; border-radius: 10px; margin-top: 4px; font-weight: 600; }
+    .status-paid { background: #E8F5E8; color: #2D7A2D; }
+    .status-pending { background: #FFF5E6; color: #B8781A; }
+    .status-overdue { background: #F5E8E8; color: #A03030; }
+
+    /* Amenities */
+    .amenity-card { min-width: 160px; background: var(--white); border: 1px solid var(--cream-dark); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-soft); cursor: pointer; transition: transform 0.2s; }
+    .amenity-card:active { transform: scale(0.97); }
+    .amenity-img { height: 90px; background: linear-gradient(135deg, var(--rose-gold-pale), var(--blush-light)); display: flex; align-items: center; justify-content: center; }
+    .amenity-img svg { width: 52px; height: 52px; filter: drop-shadow(0 3px 5px rgba(166,123,91,0.2)); }
+    .amenity-info { padding: 14px; }
+    .amenity-name { font-size: 14px; font-weight: 600; color: var(--charcoal); margin-bottom: 4px; }
+    .amenity-status { font-size: 11px; color: var(--soft-gray); }
+    .amenity-status .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; }
+    .dot-free { background: #4CAF50; }
+    .dot-busy { background: #E57373; }
+
+    /* Bottom Nav */
+    .bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--cream-dark); padding: 10px 0 24px; display: flex; justify-content: space-around; z-index: 100; }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 12px; cursor: pointer; transition: all 0.2s; border: none; background: none; font-family: inherit; position: relative; }
+    .nav-item .nav-icon { font-size: 22px; transition: all 0.2s; }
+    .nav-item .nav-label { font-size: 10px; font-weight: 500; color: var(--soft-gray); }
+    .nav-item.active .nav-icon { color: var(--rose-gold); transform: translateY(-2px); }
+    .nav-item.active .nav-label { color: var(--rose-gold); font-weight: 600; }
+    .nav-item:not(.active):active { transform: scale(0.9); }
+    .badge-count { position: absolute; top: -4px; right: -4px; background: var(--rose-gold); color: white; font-size: 9px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--cream); }
+
+    /* Profile */
+    .profile-hero { padding: 32px 24px 24px; text-align: center; position: relative; }
+    .profile-hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 120px; background: linear-gradient(180deg, var(--rose-gold-pale) 0%, transparent 100%); opacity: 0.3; z-index: 0; }
+    .avatar-container { position: relative; z-index: 1; display: inline-block; margin-bottom: 16px; }
+    .avatar-ring { width: 100px; height: 100px; border-radius: 50%; padding: 4px; background: linear-gradient(135deg, var(--rose-gold) 0%, var(--rose-deep) 100%); }
+    .avatar-inner { width: 92px; height: 92px; border-radius: 50%; background: linear-gradient(135deg, var(--blush) 0%, var(--rose-gold-pale) 100%); display: flex; align-items: center; justify-content: center; font-size: 36px; font-family: 'Playfair Display', serif; font-weight: 600; color: var(--rose-deep); border: 3px solid var(--white); }
+    .avatar-edit { position: absolute; bottom: 4px; right: 4px; width: 32px; height: 32px; border-radius: 50%; background: var(--white); border: 2px solid var(--rose-gold-pale); display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; box-shadow: var(--shadow-soft); }
+    .profile-name { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--charcoal); margin-bottom: 4px; }
+    .profile-unit { font-size: 14px; color: var(--rose-gold); font-weight: 500; margin-bottom: 4px; }
+    .profile-building { font-size: 12px; color: var(--soft-gray); }
+
+    .unit-card { margin: 0 20px 20px; background: var(--white); border: 1px solid var(--cream-dark); border-radius: 20px; padding: 20px; box-shadow: var(--shadow-soft); }
+    .unit-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .unit-icon { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, var(--rose-gold-pale), var(--blush-light)); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .unit-card-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: var(--charcoal); }
+    .unit-card-sub { font-size: 11px; color: var(--soft-gray); }
+    .unit-details { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .unit-detail { background: var(--cream); border-radius: 12px; padding: 12px; text-align: center; }
+    .unit-detail-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--soft-gray); margin-bottom: 4px; font-weight: 500; }
+    .unit-detail-value { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--charcoal); }
+    .unit-detail-note { font-size: 11px; color: var(--rose-gold); margin-top: 2px; }
+
+    .emergency-banner { margin: 0 20px 20px; background: linear-gradient(135deg, #FFF5F5, #FFFFFF); border: 1.5px solid #F5D5D5; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 12px; }
+    .emergency-icon { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #F5D5D5, #F5E8E8); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .emergency-text { flex: 1; }
+    .emergency-title { font-size: 13px; font-weight: 600; color: #A03030; margin-bottom: 2px; }
+    .emergency-desc { font-size: 11px; color: #8A6060; }
+    .emergency-btn { padding: 8px 14px; border-radius: 10px; background: #C44444; color: white; font-size: 12px; font-weight: 600; border: none; cursor: pointer; text-decoration: none; }
+    .emergency-btn:active { transform: scale(0.95); }
+
+    .contact-card { margin: 0 20px 10px; background: var(--white); border: 1px solid var(--cream-dark); border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow-soft); }
+    .contact-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .contact-avatar.gold { background: linear-gradient(135deg, var(--rose-gold-pale), var(--blush-light)); }
+    .contact-avatar.green { background: linear-gradient(135deg, #D4E8D4, #E8F5E8); }
+    .contact-avatar.blue { background: linear-gradient(135deg, #D5E0E8, #E8F0F5); }
+    .contact-info { flex: 1; }
+    .contact-name { font-size: 14px; font-weight: 600; color: var(--charcoal); margin-bottom: 2px; }
+    .contact-role { font-size: 12px; color: var(--rose-gold); font-weight: 500; margin-bottom: 4px; }
+    .contact-phone { font-size: 12px; color: var(--soft-gray); }
+    .contact-actions { display: flex; gap: 8px; }
+    .contact-action-btn { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--cream-dark); background: var(--white); display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; text-decoration: none; color: inherit; }
+    .contact-action-btn:active { transform: scale(0.92); background: var(--blush-light); }
+
+    .settings-group { margin: 0 20px 16px; background: var(--white); border: 1px solid var(--cream-dark); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-soft); }
+    .settings-item { display: flex; align-items: center; gap: 14px; padding: 16px 18px; border-bottom: 1px solid var(--cream-dark); cursor: pointer; transition: background 0.2s; text-decoration: none; color: inherit; }
+    .settings-item:last-child { border-bottom: none; }
+    .settings-item:active { background: var(--cream); }
+    .settings-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .settings-icon.gold { background: linear-gradient(135deg, var(--rose-gold-pale), var(--blush-light)); }
+    .settings-icon.green { background: linear-gradient(135deg, #D4E8D4, #E8F5E8); }
+    .settings-icon.purple { background: linear-gradient(135deg, #E8D5E0, #F0E8F0); }
+    .settings-icon.blue { background: linear-gradient(135deg, #D5E0E8, #E8F0F5); }
+    .settings-icon.red { background: linear-gradient(135deg, #F5D5D5, #F5E8E8); }
+    .settings-content { flex: 1; }
+    .settings-label { font-size: 14px; font-weight: 500; color: var(--charcoal); margin-bottom: 2px; }
+    .settings-desc { font-size: 12px; color: var(--soft-gray); }
+    .settings-arrow { font-size: 14px; color: var(--soft-gray); }
+
+    .toggle-container { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--cream-dark); }
+    .toggle-container:last-child { border-bottom: none; }
+    .toggle-label { font-size: 14px; font-weight: 500; color: var(--charcoal); }
+    .toggle-switch { width: 48px; height: 26px; border-radius: 13px; background: var(--cream-dark); position: relative; cursor: pointer; transition: background 0.3s; flex-shrink: 0; }
+    .toggle-switch.on { background: linear-gradient(135deg, var(--rose-gold), var(--rose-deep)); }
+    .toggle-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; border-radius: 50%; background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: transform 0.3s; }
+    .toggle-switch.on::after { transform: translateX(22px); }
+
+    .logout-btn { margin: 24px 20px 20px; padding: 16px; border-radius: 14px; border: 1.5px solid #F5D5D5; background: linear-gradient(135deg, #FFF5F5, #FFFFFF); color: #C44444; font-size: 14px; font-weight: 600; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .logout-btn:active { transform: scale(0.98); background: #F5E8E8; }
+    .version { text-align: center; font-size: 11px; color: var(--soft-gray); margin-bottom: 20px; }
+
+    /* Share Page */
+    .tabs-container { display: flex; gap: 8px; padding: 16px 20px 8px; overflow-x: auto; scrollbar-width: none; }
+    .tabs-container::-webkit-scrollbar { display: none; }
+    .tab-chip { padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--cream-dark); background: var(--white); font-size: 13px; font-weight: 500; color: var(--charcoal-light); cursor: pointer; white-space: nowrap; transition: all 0.2s; font-family: inherit; }
+    .tab-chip.active { background: linear-gradient(135deg, var(--rose-gold) 0%, var(--rose-deep) 100%); color: white; border-color: transparent; box-shadow: 0 4px 16px rgba(196,149,106,0.3); }
+
+    .share-card { margin: 12px 20px 16px; background: var(--white); border: 1px solid var(--cream-dark); border-radius: 20px; padding: 20px; box-shadow: var(--shadow-soft); }
+    .share-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .share-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .share-icon.gold { background: linear-gradient(135deg, var(--rose-gold-pale), var(--blush-light)); }
+    .share-icon.blue { background: linear-gradient(135deg, #D5E0E8, #E8F0F5); }
+    .share-title-group { flex: 1; }
+    .share-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: var(--charcoal); margin-bottom: 2px; }
+    .share-subtitle { font-size: 12px; color: var(--soft-gray); }
+    .share-description { font-size: 13px; color: var(--charcoal-light); line-height: 1.6; margin-bottom: 16px; }
+
+    .link-preview { background: var(--cream); border: 1px solid var(--cream-dark); border-radius: 14px; padding: 14px; margin-bottom: 16px; }
+    .link-url { font-size: 12px; color: var(--rose-gold); font-weight: 500; margin-bottom: 8px; word-break: break-all; }
+    .link-meta { display: flex; align-items: center; gap: 10px; }
+    .link-favicon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--rose-gold-pale), var(--blush-light)); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .link-info { flex: 1; }
+    .link-name { font-size: 13px; font-weight: 600; color: var(--charcoal); }
+    .link-desc { font-size: 11px; color: var(--soft-gray); }
+
+    .expiry-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .expiry-label { font-size: 13px; color: var(--charcoal-light); font-weight: 500; }
+    .expiry-badge { font-size: 11px; padding: 4px 12px; border-radius: 20px; font-weight: 600; }
+    .expiry-active { background: #E8F5E8; color: #2D7A2D; }
+    .expiry-soon { background: #FFF5E6; color: #B8781A; }
+
+    .action-buttons { display: flex; gap: 10px; }
+    .action-btn { flex: 1; padding: 14px; border-radius: 14px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; text-decoration: none; }
+    .action-btn:active { transform: scale(0.97); }
+    .btn-whatsapp { background: linear-gradient(135deg, var(--whatsapp) 0%, var(--whatsapp-dark) 100%); color: white; box-shadow: 0 4px 16px rgba(37,211,102,0.3); }
+    .btn-copy { background: var(--cream); color: var(--charcoal); border: 1.5px solid var(--cream-dark); }
+    .btn-copy:active { background: var(--blush-light); }
+
+    .qr-section { margin: 0 20px 16px; background: var(--white); border: 1px solid var(--cream-dark); border-radius: 20px; padding: 24px; text-align: center; box-shadow: var(--shadow-soft); }
+    .qr-label { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: var(--charcoal); margin-bottom: 4px; }
+    .qr-sublabel { font-size: 12px; color: var(--soft-gray); margin-bottom: 20px; }
+    .qr-placeholder { width: 180px; height: 180px; margin: 0 auto 20px; background: var(--cream); border: 2px dashed var(--cream-dark); border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; }
+    .qr-placeholder .qr-icon { font-size: 48px; opacity: 0.3; }
+    .qr-placeholder .qr-text { font-size: 11px; color: var(--soft-gray); font-style: italic; }
+    .qr-actions { display: flex; gap: 10px; }
+    .qr-btn { flex: 1; padding: 12px; border-radius: 12px; border: 1.5px solid var(--cream-dark); background: var(--white); font-size: 13px; font-weight: 500; color: var(--charcoal); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: inherit; }
+    .qr-btn:active { background: var(--blush-light); }
+
+    .clear-btn { font-family: 'Inter', sans-serif; font-size: 12px; color: var(--rose-gold); font-weight: 500; cursor: pointer; }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--charcoal); color: white; padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 300; opacity: 0; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* FAB */
+    .fab { position: absolute; bottom: 90px; right: 20px; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--rose-gold) 0%, var(--rose-deep) 100%); color: white; border: none; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(196,149,106,0.4); cursor: pointer; z-index: 90; transition: all 0.2s; }
+    .fab:active { transform: scale(0.92); }
+
+    /* Modal */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 250; display: none; align-items: flex-end; justify-content: center; }
+    .modal-overlay.active { display: flex; }
+    .modal-sheet { background: var(--white); border-radius: 24px 24px 0 0; padding: 24px; width: 100%; max-width: 390px; animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-handle { width: 40px; height: 4px; background: var(--cream-dark); border-radius: 2px; margin: 0 auto 20px; }
+    .modal-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: var(--charcoal); margin-bottom: 4px; text-align: center; }
+    .modal-subtitle { font-size: 13px; color: var(--soft-gray); text-align: center; margin-bottom: 24px; }
+    .modal-option { display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 14px; margin-bottom: 8px; cursor: pointer; transition: background 0.2s; border: none; background: var(--cream); width: 100%; text-align: left; font-family: inherit; }
+    .modal-option:active { background: var(--blush-light); }
+    .modal-option-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .modal-option-text { flex: 1; }
+    .modal-option-title { font-size: 15px; font-weight: 600; color: var(--charcoal); margin-bottom: 2px; }
+    .modal-option-desc { font-size: 12px; color: var(--soft-gray); }
+    .modal-close { margin-top: 16px; padding: 14px; border-radius: 14px; border: none; background: var(--cream); color: var(--charcoal); font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; font-family: inherit; }
+    .modal-close:active { background: var(--blush-light); }
+  </style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="screen" id="screen">
+
+    <!-- PAGE: HOME -->
+    <div class="page active" id="page-home">
+      <div class="mobile-header">
+        <div class="header-top">
+          <div>
+            <div class="header-greeting">Hola, <span>María</span></div>
+            <div class="header-sub">Unidad 3°C · Av. Córdoba 2456</div>
+          </div>
+          <div class="header-avatar" onclick="goToPage('profile')">MG</div>
+        </div>
+        <div class="building-pill">🏢 Av. Córdoba 2456 <span class="arrow">▼</span></div>
+      </div>
+
+      <div class="main-card">
+        <div class="card-label">Expensa Julio 2026</div>
+        <div class="card-amount">$38.750</div>
+        <div class="card-detail">Vence el 15 de julio · Coeficiente: 0.85</div>
+        <div class="card-actions">
+          <button class="card-btn card-btn-primary" onclick="showToast('Redirigiendo a MercadoPago...')">💳 Pagar ahora</button>
+          <button class="card-btn card-btn-ghost" onclick="showToast('Descargando recibo PDF...')">📄 Ver detalle</button>
+        </div>
+      </div>
+
+      <div class="section-title">Acciones Rápidas</div>
+      <div class="horizontal-scroll">
+        <button class="action-card" onclick="showToast('Mis expensas')">
+          <div class="ac-icon">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="card-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D4A97E"/><stop offset="1" stop-color="#A67B5B"/></linearGradient>
+                <linearGradient id="paper-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F2EBE2"/></linearGradient>
+                <radialGradient id="coin-g" cx="0.35" cy="0.3" r="0.85"><stop offset="0" stop-color="#F5D98A"/><stop offset="1" stop-color="#D4A030"/></radialGradient>
+              </defs>
+              <ellipse cx="32" cy="53" rx="20" ry="4" fill="#A67B5B" opacity="0.18"/>
+              <rect x="15" y="10" width="24" height="32" rx="4" fill="url(#paper-g)" stroke="#E8D5C0" stroke-width="1" transform="rotate(-8 27 26)"/>
+              <rect x="18" y="15" width="14" height="2.4" rx="1.2" fill="#E8AFAF" transform="rotate(-8 25 16)"/>
+              <rect x="18" y="20" width="10" height="2" rx="1" fill="#D9CFC3" transform="rotate(-8 23 21)"/>
+              <rect x="18" y="24" width="10" height="2" rx="1" fill="#D9CFC3" transform="rotate(-8 23 25)"/>
+              <circle cx="16" cy="34" r="7" fill="url(#coin-g)"/>
+              <text x="16" y="37.5" font-size="8" text-anchor="middle" fill="#8A6420" font-family="Inter, sans-serif" font-weight="700">$</text>
+              <rect x="24" y="26" width="30" height="20" rx="4.5" fill="url(#card-g)"/>
+              <rect x="27" y="30" width="7" height="5.5" rx="1.5" fill="#F5D98A"/>
+              <rect x="27" y="39" width="16" height="2.2" rx="1.1" fill="#FAF6F1" opacity="0.85"/>
+              <path d="M40 24l4-5 3 3-9 10-5-2 2-5Z" fill="#8FC28F"/>
+              <path d="M44 19l3 3-2 1-2-2 1-2Z" fill="#5FA860"/>
+            </svg>
+          </div>
+          <div class="ac-label">Mis expensas</div>
+        </button>
+        <button class="action-card" onclick="showToast('Reportar incidencia')">
+          <div class="ac-icon">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="wrench-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A8D8A8"/><stop offset="1" stop-color="#5FA860"/></linearGradient>
+              </defs>
+              <ellipse cx="32" cy="52" rx="20" ry="4" fill="#4A8C4A" opacity="0.15"/>
+              <path d="M44 14a9 9 0 0 0-11.6 11.6L15 43l6 6 17.4-17.4A9 9 0 0 0 50 20l-6.2 6.2-5-5L44 14Z" fill="url(#wrench-g)"/>
+              <circle cx="18.5" cy="45.5" r="3" fill="#FAF6F1"/>
+            </svg>
+          </div>
+          <div class="ac-label">Reportar</div>
+        </button>
+        <button class="action-card" onclick="showToast('Reservar amenity')">
+          <div class="ac-icon">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="cal-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F0E8F0"/></linearGradient>
+                <linearGradient id="cal-top" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#C99CC4"/><stop offset="1" stop-color="#9C6B96"/></linearGradient>
+              </defs>
+              <ellipse cx="32" cy="52" rx="20" ry="4" fill="#9C6B96" opacity="0.15"/>
+              <rect x="11" y="16" width="42" height="34" rx="7" fill="url(#cal-body)" stroke="#E3CFE0" stroke-width="1"/>
+              <rect x="11" y="16" width="42" height="12" rx="6" fill="url(#cal-top)"/>
+              <rect x="19" y="11" width="4" height="10" rx="2" fill="#7A4F76"/>
+              <rect x="41" y="11" width="4" height="10" rx="2" fill="#7A4F76"/>
+              <circle cx="22" cy="38" r="3" fill="#C99CC4"/>
+              <circle cx="32" cy="38" r="3" fill="#E8D5E0"/>
+              <circle cx="42" cy="38" r="3" fill="#E8D5E0"/>
+              <circle cx="22" cy="44.5" r="3" fill="#E8D5E0"/>
+              <circle cx="32" cy="44.5" r="3" fill="#C99CC4"/>
+            </svg>
+          </div>
+          <div class="ac-label">Reservar</div>
+        </button>
+        <button class="action-card" onclick="goToPage('share')">
+          <div class="ac-icon">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="door-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8FB6D4"/><stop offset="1" stop-color="#4A7A9C"/></linearGradient>
+              </defs>
+              <ellipse cx="32" cy="52" rx="20" ry="4" fill="#4A7A9C" opacity="0.15"/>
+              <rect x="17" y="10" width="26" height="42" rx="4" fill="url(#door-g)"/>
+              <rect x="21" y="14" width="18" height="34" rx="2.5" fill="#E8F0F5" opacity="0.35"/>
+              <circle cx="36" cy="32" r="2.6" fill="#FAF6F1"/>
+              <path d="M43 24l7-4v24l-7-4Z" fill="#3D6280"/>
+            </svg>
+          </div>
+          <div class="ac-label">Visitas</div>
+        </button>
+        <button class="action-card" onclick="showToast('Comunicados')">
+          <div class="ac-icon">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="bell-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F5D98A"/><stop offset="1" stop-color="#D4913A"/></linearGradient>
+              </defs>
+              <ellipse cx="32" cy="52" rx="20" ry="4" fill="#C4813A" opacity="0.15"/>
+              <path d="M32 10c-1.7 0-3 1.3-3 3v1.6C22.5 16.3 18 21.8 18 28.5V38l-4 6h36l-4-6v-9.5c0-6.7-4.5-12.2-11-13.9V13c0-1.7-1.3-3-3-3Z" fill="url(#bell-g)"/>
+              <path d="M25 46a7 7 0 0 0 14 0Z" fill="#B87A28"/>
+              <circle cx="24" cy="19" r="3" fill="#FFF3D6"/>
+            </svg>
+          </div>
+          <div class="ac-label">Comunicados</div>
+        </button>
+      </div>
+
+      <div class="section-title">Notificaciones <span class="see-all" onclick="showToast('Ver todas las notificaciones')">Ver todas</span></div>
+      <div class="notification-card">
+        <div class="notif-icon gold">📢</div>
+        <div class="notif-content">
+          <div class="notif-title">Asamblea General Ordinaria</div>
+          <div class="notif-text">Se convoca a todos los propietarios a la asamblea del 28 de julio a las 19:00 hs en el SUM.</div>
+          <div class="notif-time">Hace 2 horas</div>
+        </div>
+      </div>
+      <div class="notification-card">
+        <div class="notif-icon red">🔧</div>
+        <div class="notif-content">
+          <div class="notif-title">Mantenimiento programado</div>
+          <div class="notif-text">El ascensor principal será revisado el viernes 18 de 9:00 a 12:00 hs.</div>
+          <div class="notif-time">Ayer, 14:30</div>
+        </div>
+      </div>
+      <div class="notification-card">
+        <div class="notif-icon green">✅</div>
+        <div class="notif-content">
+          <div class="notif-title">Pago confirmado</div>
+          <div class="notif-text">Tu pago de expensas de junio 2026 por $36.950 fue acreditado correctamente.</div>
+          <div class="notif-time">Hace 3 días</div>
+        </div>
+      </div>
+
+      <div class="section-title">Historial de Pagos <span class="see-all" onclick="showToast('Ver historial completo')">Ver todo</span></div>
+      <div class="history-item">
+        <div class="history-left"><div class="history-icon gold">📄</div><div class="history-info"><div class="month">Junio 2026</div><div class="date">Pagado el 12/06</div></div></div>
+        <div class="history-right"><div class="history-amount">$36.950</div><span class="history-status status-paid">Pagado</span></div>
+      </div>
+      <div class="history-item">
+        <div class="history-left"><div class="history-icon gold">📄</div><div class="history-info"><div class="month">Mayo 2026</div><div class="date">Pagado el 10/05</div></div></div>
+        <div class="history-right"><div class="history-amount">$35.200</div><span class="history-status status-paid">Pagado</span></div>
+      </div>
+      <div class="history-item">
+        <div class="history-left"><div class="history-icon gold">📄</div><div class="history-info"><div class="month">Abril 2026</div><div class="date">Pagado el 14/04</div></div></div>
+        <div class="history-right"><div class="history-amount">$34.800</div><span class="history-status status-paid">Pagado</span></div>
+      </div>
+
+      <div class="section-title">Amenities <span class="see-all" onclick="showToast('Reservar amenity')">Reservar</span></div>
+      <div class="horizontal-scroll">
+        <div class="amenity-card" onclick="showToast('Reservar Pileta')">
+          <div class="amenity-img">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="pool-water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FD4DC"/><stop offset="1" stop-color="#3A94A8"/></linearGradient></defs>
+              <rect x="8" y="14" width="48" height="24" rx="6" fill="url(#pool-water)"/>
+              <path d="M12 24c3-2 6-2 9 0s6 2 9 0 6-2 9 0 6 2 9 0 6-2 9 0" stroke="#FFFFFF" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.75"/>
+              <path d="M12 30c3-2 6-2 9 0s6 2 9 0 6-2 9 0 6 2 9 0 6-2 9 0" stroke="#FFFFFF" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.5"/>
+              <path d="M18 44c2.5 3 5 3 7.5 0s5-3 7.5 0 5 3 7.5 0 5-3 7.5 0" stroke="#3A94A8" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="amenity-info"><div class="amenity-name">Pileta</div><div class="amenity-status"><span class="dot dot-free"></span>Disponible</div></div>
+        </div>
+        <div class="amenity-card" onclick="showToast('Reservar Quincho')">
+          <div class="amenity-img">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="grill-body" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E8A868"/><stop offset="1" stop-color="#C4813A"/></linearGradient></defs>
+              <path d="M16 46l4-14h24l4 14Z" fill="#8A8A8A" opacity="0.25"/>
+              <ellipse cx="32" cy="26" rx="20" ry="9" fill="url(#grill-body)"/>
+              <rect x="12" y="26" width="40" height="8" rx="4" fill="#A6672A"/>
+              <path d="M16 34c1 4 3 7 6 7h20c3 0 5-3 6-7Z" fill="#8A5222"/>
+              <path d="M22 20c0-3 2-6 2-9M32 20c0-3 2-6 2-9M42 20c0-3 2-6 2-9" stroke="#D4813A" stroke-width="2.4" fill="none" stroke-linecap="round" opacity="0.7"/>
+              <rect x="27" y="41" width="10" height="10" rx="2" fill="#6B4A28"/>
+            </svg>
+          </div>
+          <div class="amenity-info"><div class="amenity-name">Quincho</div><div class="amenity-status"><span class="dot dot-busy"></span>Ocupado hoy</div></div>
+        </div>
+        <div class="amenity-card" onclick="showToast('Reservar SUM')">
+          <div class="amenity-img">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="bal1" cx="0.35" cy="0.3" r="0.85"><stop offset="0" stop-color="#F0A8BC"/><stop offset="1" stop-color="#C46A82"/></radialGradient>
+                <radialGradient id="bal2" cx="0.35" cy="0.3" r="0.85"><stop offset="0" stop-color="#F5D98A"/><stop offset="1" stop-color="#D4A030"/></radialGradient>
+                <radialGradient id="bal3" cx="0.35" cy="0.3" r="0.85"><stop offset="0" stop-color="#A8D8C4"/><stop offset="1" stop-color="#5FA88A"/></radialGradient>
+              </defs>
+              <ellipse cx="20" cy="24" rx="9" ry="11" fill="url(#bal1)"/>
+              <ellipse cx="34" cy="18" rx="9.5" ry="12" fill="url(#bal2)"/>
+              <ellipse cx="47" cy="26" rx="8" ry="10" fill="url(#bal3)"/>
+              <path d="M20 35v9M34 30v14M47 36v7" stroke="#B08A8A" stroke-width="1.4" fill="none"/>
+            </svg>
+          </div>
+          <div class="amenity-info"><div class="amenity-name">SUM</div><div class="amenity-status"><span class="dot dot-free"></span>Disponible</div></div>
+        </div>
+        <div class="amenity-card" onclick="showToast('Reservar Gimnasio')">
+          <div class="amenity-img">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="dumb-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B0A8D4"/><stop offset="1" stop-color="#6A6A9C"/></linearGradient></defs>
+              <rect x="26" y="28" width="12" height="8" rx="2" fill="url(#dumb-g)"/>
+              <rect x="14" y="20" width="8" height="24" rx="3" fill="url(#dumb-g)"/>
+              <rect x="42" y="20" width="8" height="24" rx="3" fill="url(#dumb-g)"/>
+              <rect x="10" y="26" width="4" height="12" rx="2" fill="#8A82B8"/>
+              <rect x="50" y="26" width="4" height="12" rx="2" fill="#8A82B8"/>
+            </svg>
+          </div>
+          <div class="amenity-info"><div class="amenity-name">Gimnasio</div><div class="amenity-status"><span class="dot dot-free"></span>Disponible</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: PROFILE -->
+    <div class="page" id="page-profile">
+      <div class="mobile-header">
+        <div class="header-top">
+          <div class="header-back" onclick="goToPage('home')">←</div>
+          <div class="header-title">Mi Perfil</div>
+          <div class="header-action" onclick="showToast('Modo edición')">Editar</div>
+        </div>
+      </div>
+      <div class="profile-hero">
+        <div class="avatar-container">
+          <div class="avatar-ring"><div class="avatar-inner">MG</div></div>
+          <div class="avatar-edit" onclick="showToast('Cambiar foto')">📷</div>
+        </div>
+        <div class="profile-name">María González</div>
+        <div class="profile-unit">Unidad 3°C · Coeficiente 0.85</div>
+        <div class="profile-building">Av. Córdoba 2456, Buenos Aires</div>
+      </div>
+      <div class="unit-card">
+        <div class="unit-card-header"><div class="unit-icon">🏠</div><div><div class="unit-card-title">Datos de la Unidad</div><div class="unit-card-sub">Información registrada en el consorcio</div></div></div>
+        <div class="unit-details">
+          <div class="unit-detail"><div class="unit-detail-label">Piso</div><div class="unit-detail-value">3°</div></div>
+          <div class="unit-detail"><div class="unit-detail-label">Departamento</div><div class="unit-detail-value">C</div></div>
+          <div class="unit-detail"><div class="unit-detail-label">Superficie</div><div class="unit-detail-value">85m²</div></div>
+          <div class="unit-detail"><div class="unit-detail-label">Coeficiente</div><div class="unit-detail-value">0.85</div><div class="unit-detail-note">Expensas proporcionales</div></div>
+        </div>
+      </div>
+      <div class="emergency-banner">
+        <div class="emergency-icon">🚨</div>
+        <div class="emergency-text"><div class="emergency-title">Emergencia</div><div class="emergency-desc">Contacto directo con administración</div></div>
+        <a href="tel:+541112345678" class="emergency-btn">📞 Llamar</a>
+      </div>
+      <div class="section-title">Contactos del Consorcio <span class="see-all" onclick="showToast('Agregar contacto')">+ Agregar</span></div>
+      <div class="contact-card">
+        <div class="contact-avatar gold">👩‍💼</div>
+        <div class="contact-info"><div class="contact-name">Silvia S. Brunengo</div><div class="contact-role">Administradora</div><div class="contact-phone">📞 11 1234 5678</div></div>
+        <div class="contact-actions"><a href="tel:+541112345678" class="contact-action-btn">📞</a><a href="https://wa.me/541112345678" target="_blank" class="contact-action-btn">💬</a></div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-avatar green">👨‍🔧</div>
+        <div class="contact-info"><div class="contact-name">Juan Pérez</div><div class="contact-role">Encargado / Portero</div><div class="contact-phone">📞 11 8765 4321</div></div>
+        <div class="contact-actions"><a href="tel:+541187654321" class="contact-action-btn">📞</a><a href="https://wa.me/541187654321" target="_blank" class="contact-action-btn">💬</a></div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-avatar blue">🏢</div>
+        <div class="contact-info"><div class="contact-name">Consorcio Abierto</div><div class="contact-role">Sistema de gestión</div><div class="contact-phone">🌐 www.brunengoconsorcios.com.ar</div></div>
+        <div class="contact-actions"><a href="https://brunengoconsorcios.com.ar" target="_blank" class="contact-action-btn">🌐</a><a href="mailto:info@brunengoconsorcios.com.ar" class="contact-action-btn">✉️</a></div>
+      </div>
+      <div class="section-title">Notificaciones</div>
+      <div class="settings-group">
+        <div class="toggle-container" onclick="toggleSwitch(this)"><div class="toggle-label">Notificaciones push</div><div class="toggle-switch on"></div></div>
+        <div class="toggle-container" onclick="toggleSwitch(this)"><div class="toggle-label">Recordatorios de vencimiento</div><div class="toggle-switch on"></div></div>
+        <div class="toggle-container" onclick="toggleSwitch(this)"><div class="toggle-label">Alertas de incidencias</div><div class="toggle-switch on"></div></div>
+        <div class="toggle-container" onclick="toggleSwitch(this)"><div class="toggle-label">Comunicados generales</div><div class="toggle-switch"></div></div>
+      </div>
+      <div class="section-title">Configuración</div>
+      <div class="settings-group">
+        <a href="#" class="settings-item" onclick="showToast('Cambiar contraseña'); return false;"><div class="settings-icon gold">🔐</div><div class="settings-content"><div class="settings-label">Cambiar contraseña</div><div class="settings-desc">Actualiza tu acceso a la app</div></div><div class="settings-arrow">›</div></a>
+        <a href="#" class="settings-item" onclick="showToast('Métodos de pago'); return false;"><div class="settings-icon green">💳</div><div class="settings-content"><div class="settings-label">Métodos de pago</div><div class="settings-desc">Tarjetas y cuentas vinculadas</div></div><div class="settings-arrow">›</div></a>
+        <a href="#" class="settings-item" onclick="goToPage('servicios'); return false;"><div class="settings-icon gold">🏢</div><div class="settings-content"><div class="settings-label">Servicios ConsorcioAbierto</div><div class="settings-desc">Gestión financiera integrada del consorcio</div></div><div class="settings-arrow">›</div></a>
+        <a href="#" class="settings-item" onclick="showToast('Documentos'); return false;"><div class="settings-icon purple">📄</div><div class="settings-content"><div class="settings-label">Documentos</div><div class="settings-desc">Reglamento, actas, contratos</div></div><div class="settings-arrow">›</div></a>
+        <a href="#" class="settings-item" onclick="showToast('Idioma'); return false;"><div class="settings-icon blue">🌐</div><div class="settings-content"><div class="settings-label">Idioma</div><div class="settings-desc">Español (Argentina)</div></div><div class="settings-arrow">›</div></a>
+      </div>
+      <div class="settings-group">
+        <a href="#" class="settings-item" onclick="showToast('Ayuda y soporte'); return false;"><div class="settings-icon red">❓</div><div class="settings-content"><div class="settings-label">Ayuda y soporte</div><div class="settings-desc">Preguntas frecuentes, contacto</div></div><div class="settings-arrow">›</div></a>
+        <a href="#" class="settings-item" onclick="showToast('Términos y privacidad'); return false;"><div class="settings-icon gold">ℹ️</div><div class="settings-content"><div class="settings-label">Términos y privacidad</div><div class="settings-desc">Políticas de uso de datos</div></div><div class="settings-arrow">›</div></a>
+      </div>
+      <div class="logout-btn" onclick="showToast('Cerrando sesión...')">Cerrar sesión</div>
+      <div class="version">Brunengo Consorcios v2.4.1 · Buenos Aires, Argentina</div>
+    </div>
+
+    <!-- PAGE: SHARE -->
+    <div class="page" id="page-share">
+      <div class="mobile-header">
+        <div class="header-top">
+          <div class="header-back" onclick="goToPage('home')">←</div>
+          <div class="header-title">Compartir Acceso</div>
+          <div class="header-action" onclick="showModal()">Nuevo</div>
+        </div>
+      </div>
+      <div class="tabs-container">
+        <button class="tab-chip active" onclick="setTab(this)">🔗 Vínculo</button>
+        <button class="tab-chip" onclick="setTab(this)">📱 QR</button>
+        <button class="tab-chip" onclick="setTab(this)">🚪 Visitas</button>
+        <button class="tab-chip" onclick="setTab(this)">📅 Amenities</button>
+      </div>
+      <div class="share-card">
+        <div class="share-card-header"><div class="share-icon gold">🚪</div><div class="share-title-group"><div class="share-title">Invitación de Visita</div><div class="share-subtitle">Unidad 3°C · Av. Córdoba 2456</div></div></div>
+        <div class="share-description">Compartí este vínculo con tu visita para que el portero pueda validar el acceso rápidamente. El código es único y tiene validez limitada.</div>
+        <div class="link-preview">
+          <div class="link-url" id="link1">brunengo.app/visita/X7K9m2PqL</div>
+          <div class="link-meta"><div class="link-favicon">🏢</div><div class="link-info"><div class="link-name">Brunengo Consorcios</div><div class="link-desc">Acceso validado · Unidad 3°C</div></div></div>
+        </div>
+        <div class="expiry-row"><div class="expiry-label">⏱ Validez</div><div class="expiry-badge expiry-active">✓ 24 horas</div></div>
+        <div class="action-buttons">
+          <a href="https://wa.me/?text=Hola!%20Te%20envio%20el%20vinculo%20de%20acceso%20para%20visitar%20mi%20departamento%20en%20Av.%20Cordoba%202456.%20Unidad%203C.%20Link:%20https://brunengo.app/visita/X7K9m2PqL" target="_blank" class="action-btn btn-whatsapp">📱 Enviar por WhatsApp</a>
+          <button class="action-btn btn-copy" onclick="copyLink('link1')">📋 Copiar</button>
+        </div>
+      </div>
+      <div class="share-card">
+        <div class="share-card-header"><div class="share-icon blue">🏊</div><div class="share-title-group"><div class="share-title">Reserva Pileta</div><div class="share-subtitle">Sábado 19 de julio · 15:00 - 17:00</div></div></div>
+        <div class="share-description">Compartí esta reserva con familiares o invitados que vayan a usar el amenity contigo.</div>
+        <div class="link-preview">
+          <div class="link-url" id="link2">brunengo.app/reserva/P3N8vLqR</div>
+          <div class="link-meta"><div class="link-favicon">🏊</div><div class="link-info"><div class="link-name">Reserva Pileta</div><div class="link-desc">19/07 · 15:00-17:00 · 4 personas</div></div></div>
+        </div>
+        <div class="expiry-row"><div class="expiry-label">⏱ Validez</div><div class="expiry-badge expiry-soon">⚠ Hasta el 19/07</div></div>
+        <div class="action-buttons">
+          <a href="https://wa.me/?text=Hola!%20Te%20invito%20a%20la%20pileta%20el%20sabado%2019/07%20de%2015:00%20a%2017:00.%20Reserva:%20https://brunengo.app/reserva/P3N8vLqR" target="_blank" class="action-btn btn-whatsapp">📱 Enviar por WhatsApp</a>
+          <button class="action-btn btn-copy" onclick="copyLink('link2')">📋 Copiar</button>
+        </div>
+      </div>
+      <div class="qr-section">
+        <div class="qr-label">Código QR de Acceso</div>
+        <div class="qr-sublabel">Escaneá en la portería para ingresar</div>
+        <div class="qr-placeholder" id="qrCanvas"><div class="qr-icon">▣</div><div class="qr-text">QR dinámico generado</div></div>
+        <div class="qr-actions">
+          <button class="qr-btn" onclick="showToast('QR guardado en galería')">📱 Guardar</button>
+          <button class="qr-btn" onclick="shareQR()">📤 Compartir</button>
+          <button class="qr-btn" onclick="showToast('QR actualizado')">🔄 Actualizar</button>
+        </div>
+      </div>
+      <div class="section-title">Historial de Compartidos <span class="clear-btn" onclick="showToast('Historial limpiado')">Limpiar</span></div>
+      <div class="history-item"><div class="history-icon" style="background:linear-gradient(135deg,#D4F5E0,#E8F8F0)">📱</div><div class="history-content"><div class="history-title">Visita — Carlos Martínez</div><div class="history-detail">Enviado por WhatsApp · Válido 24h</div></div><div class="history-time">Hoy, 14:30</div></div>
+      <div class="history-item"><div class="history-icon" style="background:linear-gradient(135deg,#F2EBE2,#FAF6F1)">📋</div><div class="history-content"><div class="history-title">Reserva SUM — Asamblea</div><div class="history-detail">Link copiado · 15 personas</div></div><div class="history-time">Ayer, 18:20</div></div>
+      <div class="history-item"><div class="history-icon" style="background:linear-gradient(135deg,#E8D5C0,#F5E6E0)">▣</div><div class="history-content"><div class="history-title">QR de acceso personal</div><div class="history-detail">Guardado en galería · Unidad 3°C</div></div><div class="history-time">12/07, 09:15</div></div>
+      <div class="history-item"><div class="history-icon" style="background:linear-gradient(135deg,#D4F5E0,#E8F8F0)">📱</div><div class="history-content"><div class="history-title">Visita — Lucía Fernández</div><div class="history-detail">Enviado por WhatsApp · Expirado</div></div><div class="history-time">10/07, 16:45</div></div>
+    </div>
+
+    <!-- PAGE: SERVICIOS -->
+    <div class="page" id="page-servicios">
+      <div class="mobile-header">
+        <div class="header-top">
+          <div class="header-back" onclick="goToPage('profile')">←</div>
+          <div class="header-title">Servicios</div>
+          <div style="width:36px"></div>
+        </div>
+      </div>
+
+      <div class="main-card" style="margin-top:20px;">
+        <div class="card-label">ConsorcioAbierto</div>
+        <div style="font-family:'Playfair Display',serif; font-size:22px; font-weight:700; margin-bottom:8px; position:relative; z-index:1;">Gestión financiera integrada</div>
+        <div class="card-detail" style="margin-bottom:0;">Cobros y pagos desde el mismo sistema, sin homebankings ni doble carga de información.</div>
+      </div>
+
+      <div class="section-title">Todo en un solo entorno</div>
+
+      <div class="notification-card">
+        <div class="notif-icon gold">🔄</div>
+        <div class="notif-content">
+          <div class="notif-title">Adiós a la conciliación manual</div>
+          <div class="notif-text">Cuando cobrás y pagás desde ConsorcioAbierto, no necesitás conciliar: siempre trabajás con información actualizada. Si operás con otras cuentas, el sistema sugiere coincidencias automáticamente.</div>
+        </div>
+      </div>
+
+      <div class="notification-card">
+        <div class="notif-icon blue">📥</div>
+        <div class="notif-content">
+          <div class="notif-title">Carga automática de facturas</div>
+          <div class="notif-text">Gastos Flash procesa facturas automáticamente a partir de cargas masivas o correos electrónicos.</div>
+        </div>
+      </div>
+
+      <div class="notification-card">
+        <div class="notif-icon green">✅</div>
+        <div class="notif-content">
+          <div class="notif-title">Rendición de cuentas en un clic</div>
+          <div class="notif-text">Prepará la información de cierre de cada consorcio de forma más rápida, con documentación organizada y siempre disponible.</div>
+        </div>
+      </div>
+
+      <div class="notification-card">
+        <div class="notif-icon gold">⚡</div>
+        <div class="notif-content">
+          <div class="notif-title">Cobro inmediato de las expensas</div>
+          <div class="notif-text">El cobro de expensas impacta en tiempo real, con disponibilidad inmediata de los fondos.</div>
+        </div>
+      </div>
+
+      <div class="notification-card">
+        <div class="notif-icon red">💬</div>
+        <div class="notif-content">
+          <div class="notif-title">Canal centralizado con los consorcistas</div>
+          <div class="notif-text">Hacé seguimiento de cada caso y mantené trazabilidad hasta su resolución.</div>
+        </div>
+      </div>
+
+      <div class="notification-card">
+        <div class="notif-icon blue">🧾</div>
+        <div class="notif-content">
+          <div class="notif-title">Liquidación de sueldos</div>
+          <div class="notif-text">Sueldos, cargas sociales y Libro Ley desde el mismo entorno de trabajo.</div>
+        </div>
+      </div>
+
+      <div style="height:20px"></div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <button class="nav-item active" onclick="goToPage('home')"><span class="nav-icon">🏠</span><span class="nav-label">Inicio</span></button>
+    <button class="nav-item" onclick="showToast('Expensas')"><span class="nav-icon">💰</span><span class="nav-label">Expensas</span></button>
+    <button class="nav-item" onclick="showToast('Reservas')"><span class="nav-icon">📅</span><span class="nav-label">Reservas</span></button>
+    <button class="nav-item" onclick="showToast('Soporte')"><span class="nav-icon">🔧</span><span class="nav-label">Soporte</span><span class="badge-count">2</span></button>
+    <button class="nav-item" onclick="goToPage('profile')"><span class="nav-icon">👤</span><span class="nav-label">Perfil</span></button>
+  </div>
+
+  <!-- FAB -->
+  <button class="fab" onclick="showModal()">➕</button>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nuevo acceso compartido</div>
+    <div class="modal-subtitle">Seleccioná el tipo de vínculo que querés generar</div>
+    <button class="modal-option" onclick="showToast('Nueva invitación de visita'); closeModalDirect()">
+      <div class="modal-option-icon" style="background:linear-gradient(135deg,#E8D5C0,#F5E6E0)">🚪</div>
+      <div class="modal-option-text"><div class="modal-option-title">Invitación de visita</div><div class="modal-option-desc">Generar vínculo temporal para acceso</div></div>
+    </button>
+    <button class="modal-option" onclick="showToast('Nueva reserva de amenity'); closeModalDirect()">
+      <div class="modal-option-icon" style="background:linear-gradient(135deg,#D5E0E8,#E8F0F5)">🏊</div>
+      <div class="modal-option-text"><div class="modal-option-title">Reserva de amenity</div><div class="modal-option-desc">Compartir acceso a pileta, quincho, SUM</div></div>
+    </button>
+    <button class="modal-option" onclick="showToast('Nuevo QR de acceso'); closeModalDirect()">
+      <div class="modal-option-icon" style="background:linear-gradient(135deg,#E8D5E0,#F0E8F0)">▣</div>
+      <div class="modal-option-text"><div class="modal-option-title">Código QR</div><div class="modal-option-desc">Generar código escaneable para portería</div></div>
+    </button>
+    <button class="modal-option" onclick="showToast('Nuevo comunicado'); closeModalDirect()">
+      <div class="modal-option-icon" style="background:linear-gradient(135deg,#F5E6D5,#FDF0E5)">📢</div>
+      <div class="modal-option-text"><div class="modal-option-title">Comunicado</div><div class="modal-option-desc">Enviar aviso a vecinos del edificio</div></div>
+    </button>
+    <button class="modal-close" onclick="closeModalDirect()">Cancelar</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  function goToPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + pageId).classList.add('active');
+    document.getElementById('screen').scrollTop = 0;
+    const navItems = document.querySelectorAll('.nav-item');
+    if (pageId === 'home') navItems[0].classList.add('active');
+    if (pageId === 'profile') navItems[4].classList.add('active');
+  }
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+  function toggleSwitch(el) {
+    const sw = el.querySelector('.toggle-switch');
+    sw.classList.toggle('on');
+  }
+  function copyLink(id) {
+    const text = document.getElementById(id).textContent;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => showToast('Link copiado al portapapeles'));
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Link copiado al portapapeles');
+    }
+  }
+  function shareQR() {
+    if (navigator.share) {
+      navigator.share({ title: 'QR de acceso Brunengo', text: 'Escaneá este QR para ingresar al edificio' });
+    } else {
+      showToast('Compartir QR');
+    }
+  }
+  function showModal() {
+    document.getElementById('modalOverlay').classList.add('active');
+  }
+  function closeModal(e) {
+    if (e.target === document.getElementById('modalOverlay')) {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+  }
+  function closeModalDirect() {
+    document.getElementById('modalOverlay').classList.remove('active');
+  }
+  function setTab(el) {
+    document.querySelectorAll('.tab-chip').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
